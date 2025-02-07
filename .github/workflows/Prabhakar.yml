@@ -19,9 +19,19 @@ jobs:
 
     - name: Compile Hello World
       run: |
+        mkdir -p build
         echo '#include <stdio.h>' > hello.c
         echo 'int main() { printf("Hello, World!\\n"); return 0; }' >> hello.c
-        gcc hello.c -o hello
+        gcc hello.c -o build/hello
+    - name: Upload a Build Artifact
+      uses: actions/upload-artifact@v4.6.0
+      with:
+    # Artifact name
+          name: Build-Artifact
+         # optional, default is artifact
+    # A file, directory or wildcard pattern that describes what to upload
+          path: ${{github.workspace}}/build
+    # The desired behavior if no files are found using the provided path      
        
         
   test:
@@ -41,39 +51,39 @@ jobs:
   
       - name: Run Hello World
         run: ./hello
-  uses: actions/upload-artifact@v4.6.0
-  with:
-        # Artifact name essentially
-        name: # optional, default is artifact
-        # A file, directory or wildcard pattern that describes what to upload
-        path: $(github.workspace)
+      # - uses: actions/upload-artifact@v4.6.0
+      #   with:
+      #   # Artifact name essentially
+      #   name: # optional, default is artifact
+      #   # A file, directory or wildcard pattern that describes what to upload
+      #   path: $(github.workspace)
       
         
-  Deploy:
-     runs-on: windows-latest
-     environment:
-       name:  Prbahakar-Prod
-     needs: test
-     steps:
-      - uses: actions/checkout@v4
+  # Deploy:
+  #    runs-on: windows-latest
+  #    environment:
+  #      name:  Prbahakar-Prod
+  #    needs: test
+  #    steps:
+  #     - uses: actions/checkout@v4
   
-      - name: Install dependencies
-        run: sudo apt-get update && sudo apt-get install -y build-essential
+  #     - name: Install dependencies
+  #       run: sudo apt-get update && sudo apt-get install -y build-essential
   
-      - name: Compile Hello World
-        run: |
-          echo '#include <stdio.h>' > hello.c
-          echo 'int main() { printf("Hello, World!\\n"); return 0; }' >> hello.c
-          gcc hello.c -o hello
+  #     - name: Compile Hello World
+  #       run: |
+  #         echo '#include <stdio.h>' > hello.c
+  #         echo 'int main() { printf("Hello, World!\\n"); return 0; }' >> hello.c
+  #         gcc hello.c -o hello
   
-      - name: Run Hello World
-        run: ./hello
-      - name: Download a Build Artifact
-        uses: actions/download-artifact@v4.1.8
-        with:
-        # Name of the artifact to download. If unspecified, all artifacts for the run are downloaded.
-          name: Build Artifact
-        # Destination path. Supports basic tilde expansion. Defaults to $GITHUB_WORKSPACE
-          path: $(github.workspace) # optional
+  #     - name: Run Hello World
+  #       run: ./hello
+  #     - name: Download a Build Artifact
+  #       uses: actions/download-artifact@v4.1.8
+  #       with:
+  #       # Name of the artifact to download. If unspecified, all artifacts for the run are downloaded.
+  #         name: Build Artifact
+  #       # Destination path. Supports basic tilde expansion. Defaults to $GITHUB_WORKSPACE
+  #         path: $(github.workspace) # optional
        
           
