@@ -22,6 +22,14 @@ jobs:
         echo '#include <stdio.h>' > hello.c
         echo 'int main() { printf("Hello, World!\\n"); return 0; }' >> hello.c
         gcc hello.c -o hello- name: Upload a Build Artifact
+        - name:
+        uses: actions/upload-artifact@v4.6.0
+        with:
+        # Artifact name essentially
+        name: # optional, default is artifact
+        # A file, directory or wildcard pattern that describes what to upload
+        path: $(github.workspace)
+      
         
   build-2:
       runs-on: windows-latest
