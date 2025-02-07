@@ -21,17 +21,10 @@ jobs:
       run: |
         echo '#include <stdio.h>' > hello.c
         echo 'int main() { printf("Hello, World!\\n"); return 0; }' >> hello.c
-        gcc hello.c -o hello- name: Upload a Build Artifact
-        - name:
-        uses: actions/upload-artifact@v4.6.0
-        with:
-        # Artifact name essentially
-        name: # optional, default is artifact
-        # A file, directory or wildcard pattern that describes what to upload
-        path: $(github.workspace)
-      
+        gcc hello.c -o hello
+       
         
-  build-2:
+  test:
       runs-on: windows-latest
       needs: build
       steps:
@@ -48,3 +41,39 @@ jobs:
   
       - name: Run Hello World
         run: ./hello
+  uses: actions/upload-artifact@v4.6.0
+  with:
+        # Artifact name essentially
+        name: # optional, default is artifact
+        # A file, directory or wildcard pattern that describes what to upload
+        path: $(github.workspace)
+      
+        
+  Deploy:
+     runs-on: windows-latest
+     environment:
+       name:  Prbahakar-Prod
+     needs: test
+     steps:
+      - uses: actions/checkout@v4
+  
+      - name: Install dependencies
+        run: sudo apt-get update && sudo apt-get install -y build-essential
+  
+      - name: Compile Hello World
+        run: |
+          echo '#include <stdio.h>' > hello.c
+          echo 'int main() { printf("Hello, World!\\n"); return 0; }' >> hello.c
+          gcc hello.c -o hello
+  
+      - name: Run Hello World
+        run: ./hello
+      - name: Download a Build Artifact
+        uses: actions/download-artifact@v4.1.8
+        with:
+        # Name of the artifact to download. If unspecified, all artifacts for the run are downloaded.
+          name: Build Artifact
+        # Destination path. Supports basic tilde expansion. Defaults to $GITHUB_WORKSPACE
+          path: $(github.workspace) # optional
+       
+          
