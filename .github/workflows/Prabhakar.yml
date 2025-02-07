@@ -21,10 +21,15 @@ jobs:
       run: |
         echo '#include <stdio.h>' > hello.c
         echo 'int main() { printf("Hello, World!\\n"); return 0; }' >> hello.c
-        gcc hello.c -o hello
-
-    - name: Run Hello World
-      run: ./hello
+        gcc hello.c -o hello- name: Upload a Build Artifact
+  - name: Upload a Build Artifact
+  uses: actions/upload-artifact@v4.6.0
+  with:
+    # Artifact name
+    name: Upload a build artifact
+    # A file, directory or wildcard pattern that describes what to upload
+    path: $(github.workspace)
+    # The desired behavior if no files are found using the provided path.
 
   test:
   build-2:
